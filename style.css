@@ -1,0 +1,93 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    
+    font: 400 16px Monospace;
+}
+
+form {
+    
+    margin: 200px auto;
+    width: 500px;
+    height: 400px;
+}
+
+form div {
+    margin: 0 5px;
+}
+
+
+.equation-border {
+    
+    height: 50px;
+    padding: 4px;  
+    margin: 0 0 20px 0;
+    border-radius: 5px;
+    border: 1px solid rgb(196, 195, 195);
+}
+
+.equation-border:hover {
+    
+    border-top: 1px solid grey;
+}
+
+/* .equation-border:focus {
+    
+    border: 1px solid #1E90FF;
+} */
+
+
+span {
+    color: grey;
+    font-size: 14px;
+}
+
+input[type='text'] {
+
+    border: none;
+    text-align: right;
+    font-size: 20px;
+    
+    width: calc(100% - 10px);
+    outline: none;     
+}
+
+
+
+/* BUTTONS */
+button, input[type='reset'] {
+    background: #C0C0C0;
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    width: 70px;
+    height: 40px;
+    margin: 7px 2px;
+}
+
+input[type='submit'] {
+    background: #1E90FF;
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    width: 70px;
+    height: 40px;
+    margin: 7px 2px;
+}
+
+button:hover {
+    background: #1E90FF;
+    transition: linear 0.3s;
+}
+
+.numbers {
+    background: #e9e0e0;
+}
+
+.numbers:hover {
+    background: #e9e0e0;
+}
+
+sup {
+    font-size: 12px;
+}
