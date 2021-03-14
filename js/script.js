@@ -9,7 +9,7 @@ window.onload = (event) => {
     let solved = document.getElementById('solved');
     
     equation.onclick = (event) => {
-
+        ///????
         event.preventDefault()
         console.log('click')
     }
@@ -45,14 +45,14 @@ window.onload = (event) => {
         }
         
 
-        // console.log(code)
-        console.log(`Temp ${temp}`)
-        console.log(arr)
+        console.log(code)
+        // console.log(`Temp ${temp}`)
+        // console.log(arr)
 
         if (code === 13 || code === 61) {
 
             event.preventDefault()
-            calculate(event)
+            // calculate(event)
             return 0
         }
         // NUMBERS . ( )
@@ -108,36 +108,50 @@ window.onload = (event) => {
     };
 
 
-    document.querySelector('form').addEventListener('submit', calculate);
+    // document.querySelector('form').addEventListener('submit', calculate);
     document.querySelector('form').addEventListener('reset',  (event) => {
         solved.innerHTML = 'Answer'
     });
-    let data = document.querySelector('form')[20].addEventListener('click', add);
+    document.getElementsByTagName('')
+    // document.activeElement.addEventListener('click', add);
+    // let data = document.querySelector('form')[20].addEventListener('click', add);
 
    
 
-    function add(event) {
-        console.log(data.value)
-        console.log(event.key)
-    }
+    // function add(event) {
+
+    //     console.log(event.type)
+    //     event.preventDefault()
+    //     console.log('here')
+
+    //     // console.log(data.value)
+    //     // console.log('clicked')
+    // }
 
 
-    function calculate(event) {
-   
-        event.preventDefault()
-        console.log('calc')
-        let value = equation.value
-        let arr = value.split(' ')
+    // function calculate(event) {
+        
+    //     console.log(event.type)
+    //     event.preventDefault()
+    //     let value = equation.value
+    //     let arr = value.split(' ')
 
-        validation(arr) 
-        console.log(arr)
-        solved.innerHTML = `${equation.value}`
-        equation.value = `Result`
-    };
+    //     if (validation(arr) == false) {
+
+    //         solved.innerHTML = `${equation.value}`
+    //         equation.value = 'Invalid Syntax'
+    //         return 1
+    //     }
+
+            
+    //     console.log(arr)
+    //     solved.innerHTML = `${equation.value}`
+    //     equation.value = `Result`
+    // };
 
     function validation(arr) {
         // Checking 
-
+        return false
         // Подсчет количества скобок и тд
     }
 };
