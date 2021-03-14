@@ -6,6 +6,7 @@ window.onload = (event) => {
     let temp;
     // Поле для ввода
     let equation = document.getElementById('equation');
+    let solved = document.getElementById('solved');
     
     equation.onclick = (event) => {
 
@@ -13,19 +14,43 @@ window.onload = (event) => {
         console.log('click')
     }
 
-    equation.onkeypress = (event) => {
+   
 
-        
-        let code = event.keyCode || event.which
+    equation.oninput = (event) => {
+
         let value = equation.value
         let arr = value.split(' ')
-        arr.splice(arr.indexOf(''), 1)
+
+        for (let i of arr) {
+            if (i === '')
+                arr.splice(arr.indexOf(i), 1)
+        }
+        temp = arr[arr.length - 1]
+
+
+        console.log(`New temp ${temp}`)
+    }
+
+    equation.onkeypress = (event) => {
+
+        let code = event.keyCode || event.which
+
+
+        let value = equation.value
+        let arr = value.split(' ')
+
+        for (let i of arr) {
+            if (i === '')
+                arr.splice(arr.indexOf(i), 1)
+        }
+        
 
         // console.log(code)
-        // console.log(temp)
-        // console.log(arr)
+        console.log(`Temp ${temp}`)
+        console.log(arr)
 
         if (code === 13 || code === 61) {
+
             event.preventDefault()
             calculate(event)
             return 0
@@ -45,16 +70,14 @@ window.onload = (event) => {
 
             event.preventDefault()
             // Если стоят знаки ниже знак не поставиться
-            if ((temp == '.' || temp == '^' || temp == '*' || temp == '/' ||
-                 temp == '+' || temp == '%' || temp == '-' || temp == '=') && 
-
-                 (arr[arr.length - 1] == '.' || arr[arr.length - 1] == '^' || arr[arr.length - 1] == '*' || 
-                 arr[arr.length - 1] == '/' || arr[arr.length - 1] == '+' || arr[arr.length - 1] == '%' || 
-                 arr[arr.length - 1] == '-' || arr[arr.length - 1] == '=')) {
-                 
+            if (temp == '.' || temp == '^' || temp == '*' || temp == '/' ||
+                temp == '+' || temp == '%' || temp == '-' || temp == '=') {                
                     return 0                
-            }    
-            equation.value += ` ${event.key} `
+            }   
+            else if (temp == '(') 
+                equation.value += `${event.key}`
+            else 
+                equation.value += ` ${event.key} `
         }
         else if (code === 44) {     // ,
             event.preventDefault()
@@ -86,7 +109,12 @@ window.onload = (event) => {
 
 
     document.querySelector('form').addEventListener('submit', calculate);
+    document.querySelector('form').addEventListener('reset',  (event) => {
+        solved.innerHTML = 'Answer'
+    });
     let data = document.querySelector('form')[20].addEventListener('click', add);
+
+   
 
     function add(event) {
         console.log(data.value)
@@ -103,6 +131,8 @@ window.onload = (event) => {
 
         validation(arr) 
         console.log(arr)
+        solved.innerHTML = `${equation.value}`
+        equation.value = `Result`
     };
 
     function validation(arr) {
@@ -114,39 +144,3 @@ window.onload = (event) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // function add(event) {
-
-        
-    //     event.preventDefault() 
-    //     let active = document.getElementsByTagName('button')[5]
-    //     console.log(active.value)
-    //     console.log(active.type)
-    //     if (active.type != 'BUTTON')
-    //         return 1
-        
-    //     // console.log(document.activeElement.value)
-    //     document.getElementById("equation").value += `${active}`;
-    // }
-
-
-
-    // function calc(equation) {
-
-    //     let arr = equation.split(' ');
-    //     console.log(arr)
-    //     // let result = arr[0] + arr[3]
-        
-    //     // return result
-    // }
