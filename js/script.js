@@ -1,10 +1,10 @@
 'use strict';
 
-let actions = ['ln', 'sin', 'cos', 'tg', 'ctg', 'exp'];
+let memory = 0;
+let numsys = 10;
 
 // Function that control brackets
 function brackets_control(string) {
-    
     let left = [];
     let right = [];
     for (let i of string) {
@@ -16,22 +16,67 @@ function brackets_control(string) {
     return ((right.length >= left.length) ? false : true)
 }
 
-
-
 window.onload = (event) => {
+    let checkGroup = document.getElementsByName("numsys");
+    checkGroup[0].onclick = () => {
+        numsys = 10;
+        let hexNums = document.getElementsByClassName("hex");
+        let decNums = document.getElementsByClassName("dec");
+        for (let i = 0; i < hexNums.length; i++)
+            hexNums[i].setAttribute("enabled", "false");
+        for (let i = 0; i < decNums.length; i++)
+            decNums[i].setAttribute("enabled", "true");
+    }
+    checkGroup[1].onclick = () => {
+        numsys = 16;
+        let hexNums = document.getElementsByClassName("hex");
+        let decNums = document.getElementsByClassName("dec");
+        for (let i = 0; i < hexNums.length; i++)
+            hexNums[i].setAttribute("enabled", "true");
+        for (let i = 0; i < decNums.length; i++)
+            decNums[i].setAttribute("enabled", "true");
+    }
+    checkGroup[2].onclick = () => {
+        numsys = 8;
+        let hexNums = document.getElementsByClassName("hex");
+        let decNums = document.getElementsByClassName("dec");
+        for (let i = 0; i < hexNums.length; i++)
+            hexNums[i].setAttribute("enabled", "false");
+        for (let i = 0; i < decNums.length; i++)
+            decNums[i].setAttribute("enabled", "false");
+    }
+
+    document.getElementById("reset").onclick = () => setTimeout(() => {
+        if (numsys === 10)
+            checkGroup[0].checked = true;
+        else if (numsys === 16)
+            checkGroup[1].checked = true;
+        else if (numsys === 8)
+            checkGroup[2].checked = true;
+    }, 1);
+
+
 
     // Последний введенный символ
     let temp = '';
     // Поле для ввода
     let equation = document.getElementById('equation');
     let solved = document.getElementById('solved');
+    let form = document.querySelector('form')
 
-   
+    // Converter
+    let converter = document.querySelector('#Converter')
+    let from = document.querySelector('#from');
+    let to = document.querySelector('#to');
+
+    // Keep input always in focus
+    equation.onblur = () => {
+        equation.focus();
+    }
+
     // При изменении строки ввода
-    equation.oninput = (event) => {    
-
-        
-        let value = equation.value
+    equation.oninput = (event) => {
+        let value = equation.value;
         let arr = value.split(' ')
         // console.log(arr)
         for (let i of arr) {
@@ -40,17 +85,8 @@ window.onload = (event) => {
         }
 
         temp = arr[arr.length - 1] // temp is last element
-        
-        if (temp !== undefined) {
 
-            // // If temp = ln(8) temp save it like ln
-            for (let i of actions) {
-                if (temp.includes(i) === true) {
-                    temp = i
-                    return 0
-                }             
-            }
-            
+        if (temp !== undefined) {
             arr = temp.split('')
             // console.log(arr)
             // Дополнтельные проверки для получения временного элемента
@@ -59,7 +95,7 @@ window.onload = (event) => {
                 return 0
             }
             if (arr[0] === '(' && arr.length != 1) {
-                
+
                 arr.splice(0, 1)
                 temp = ''
                 for (let i of arr)
@@ -67,17 +103,15 @@ window.onload = (event) => {
                 // console.log(`New temp ${temp}`)
                 return 0
             }
-        }       
-
-
+        }
         console.log(`New temp ${temp}`)
     }
 
-    equation.onkeypress = (event) => {
 
+    // CLICK ON KEYBOARD
+    form.onkeypress = (event) => {
         let code = event.keyCode || event.which
-
-
+        let key = event.key;
         let value = equation.value
         let arr = value.split(' ')
 
@@ -85,257 +119,312 @@ window.onload = (event) => {
             if (i === '')
                 arr.splice(arr.indexOf(i), 1)
         }
-        
 
         // console.log(code)
-        // console.log(`Temp in key press ${temp}`)
         // console.log(arr)
+        // console.log(event.key)
+
+        let reNums = /^(\.|\(|\)|\,|\d|[abcdef])$/i;
+        let reSigns = /^[!\/\^\*\%\=\+\-]$/;
 
         if (code === 13 || code === 61) {
-
-            event.preventDefault()
-            result(event)
-            return 0
+            event.preventDefault();
+            result(event);
+            return 0;
         }
-        // NUMBERS and . ( )
-        else if ((code > 47 && code < 58) || code === 46 || code === 94 || code === 33 || code === 40 || code === 41) { 
-            
-
-
-            if (temp == 'exp' || temp == 'ln' || temp == 'sin' || temp == 'cos' || temp == 'tg' || temp == 'ctg') {
-                
-                if (code === 40 || code === 41) {
-                    event.preventDefault()
-                }
-                return 0
-            }
+        else if (key.match(reNums)) {
             // Проверяем можно ли поставить закрывающую скобку
-            if (code === 41 && brackets_control(value) === false) {
-                event.preventDefault()
-                return 0
+            if (key === ')' && !brackets_control(value)) {
+                event.preventDefault();
+                return 0;
             }
-        }     
-        else if (code === 42 || code === 43 || code === 45 || code === 47) { /* signs *%-+= */ 
-
-            event.preventDefault()
+            if (key === ',') {
+                event.preventDefault();
+                if (!isNaN(temp))
+                    equation.value += '.';
+            }
+            if (key === '.' && isNaN(temp)) {
+                event.preventDefault();
+                return 0;
+            }
+        }
+        else if (key.match(reSigns)) { /* signs /*%-+= */
+            event.preventDefault();
             // Если стоят знаки ниже знак не поставиться
-            if (temp == '.' || temp == '^' || temp == '*' || temp == '/' ||
-                temp == '+' || temp == '%' || temp == '-' || temp == '=' || 
-                temp === undefined || temp === '' || temp[temp.length - 1] === '.') {                
-                    return 0                
-            }   
-            else if (temp == '(') 
-                equation.value += `${event.key}`
-            else 
-                equation.value += ` ${event.key} `
-        }
-        else if (code === 44) {     // ,
-
-            event.preventDefault()
-            equation.value += '.'
-        }
-        else if (code === 101) {    // e
-
-            event.preventDefault()
-            equation.value += 'exp()'
-            equation.selectionStart = equation.value.length - 1
-            equation.selectionEnd = equation.value.length - 1
-            temp = 'exp'
-            return 0
-        }
-        else if (code === 115) {
-
-            event.preventDefault()
-            equation.value += 'sin()'
-            equation.selectionStart = equation.value.length - 1
-            equation.selectionEnd = equation.value.length - 1
-            temp = 'sin'
-            return 0
-        }
-        else if (code === 99) {
-
-            event.preventDefault()
-            equation.value += 'cos()'
-            equation.selectionStart = equation.value.length - 1
-            equation.selectionEnd = equation.value.length - 1
-            temp = 'cos'
-            return 0
-        }
-        else if (code === 116) {
-
-            event.preventDefault()
-            equation.value += 'tg()'
-            equation.selectionStart = equation.value.length - 1
-            equation.selectionEnd = equation.value.length - 1
-            temp = 'tg'
-            return 0
-        }
-        else if (code === 108) {    // l
-
-            event.preventDefault()
-            equation.value += 'ln()'
-            equation.selectionStart = equation.value.length - 1
-            equation.selectionEnd = equation.value.length - 1
-            temp = 'ln'
-            return 0
+            let reExcept = /[\.\^\*\+\%\=\-]$/;
+            if (!temp || temp.toString().match(reExcept))
+                return 0;
+            else if (temp == '(')
+                equation.value += `${key}`;
+            else
+                equation.value += ` ${key} `;
         }
         else {
-            event.preventDefault()
-            return 1
+            event.preventDefault();
+            return 1;
         }
-        temp = event.key
-        return 0
+        temp = event.key;
+        return 0;
     };
 
-
-    
-
-    for (let i = 0; i < 28; i++)
+    // BUTTONS ON DISPLAY
+    for (let i = 0; i < document.getElementsByTagName('button').length; i++)
         document.getElementsByTagName('button')[i].addEventListener('click', add);
-   
-    // Добавление символов по клику (СЫРО)
+
+    // Добавление символов по клику
     function add(event) {
-
         if (event.type === 'click') {
+            event.preventDefault();
+            let button = event.target;
+            let value = button.value;
 
-            event.preventDefault()
-            if (isNaN(this.value) == true) {
-                console.log(this.value)
-                if (this.value === '.' || this.value === '(' || this.value === ')')
-                    equation.value += this.value
-                else 
-                equation.value +=` ${this.value} `
+            // Вызов функции для вставки символа
+            console.log(value);
+            if (value === 'CA') {
+                converter.hidden = !converter.hidden;
+            }
+            else if (value === 'MR') {
+                if (memory != 0) {
+                    temp = memory;
+                    equation.value += temp;
+                }
+            }
+            else if (value === 'MC') {
+                temp = '';
+                memory = 0;
+            }
+            else if (value === 'M+')
+                memory += temp === '' ? +equation.value : +temp;
+            else if (value == 'M-')
+                memory -= temp === '' ? +equation.value : +temp;
+            else if (value == 'PI') {
+                temp = '𝜋';
+                equation.value += temp;
+            }
+            else if (value == '!') {
+                temp = value;
+                equation.value += temp;
+            }
+            else if (value == '^') {
+                temp = value;
+                equation.value += temp;
+            }
+            else if (value == 'sqrt') {
+                temp = value;
+                equation.value += '√(';
+            }
+            else if (value == '(') {
+                temp = value;
+                equation.value += '(';
+            }
+            else if (value == ')') {
+                if (brackets_control(equation.value))
+                    equation.value += ')';
             }
             else {
-                // console.log(this.value)
-                equation.value += this.value
-            }        
+                if (value.match(/[\d\.]/)) {
+                    equation.value += value;
+                    temp = value;
+                }
+                else if (value.match(/^[%/\*\+\-]$/)) {
+                    if (!temp.match(/^[%/\*\+\-]$/)) {
+                        console.log('sign 2')
+                        equation.value += ` ${value} `;
+                        temp = value;
+                    }
+                }
+                else if (value.match(/^[abcdef]$/i) && numsys === 16) {
+                    equation.value += value;
+                }
+            }
         }
         else {
-            return 0
+            return 0;
         }
     }
 
 
+
+
+    // RESULT
     document.querySelector('form').addEventListener('submit', result);
     document.querySelector('form').addEventListener('reset',  (event) => {
-        solved.innerHTML = 'Answer'
+        solved.innerHTML = 'Answer';
     });
 
     function result(event) {
-        
         event.preventDefault()
-        let value = equation.value
+        let value = equation.value;
 
-        if (validation(value) === false) {
-
-            solved.innerHTML = `${equation.value}`
-            equation.value = 'Invalid Syntax'
-            return 1
+        // Если нет никаких знаков мы конвертируем
+        if (!/[\D\.]+/.test(value)) {
+            if (converter.hidden) // Если окно конвертации закрыто
+                return 1;
+            if (from.value === to.value) // Если конвертационные единицы совпадают
+                return 1;
+            equation.value = convertation(value, from.value, to.value);
+            return 0;
         }
-        solved.innerHTML = `${equation.value}`
-        equation.value = `${calculate(value)}`       
-    };      
+        value = value.replaceAll('^', '**');
+        value = value.replaceAll('𝜋', Math.PI);
+        let factMatch = value.match(/( *\d+ *\!|\(.+\) *!)/g);
+        let sqrtMatch = value.match(/√ *\( *.+ *\)/g);
+        let percMatch = value.match(/(\d+|\(.+\)) *[\/\*\+\-] *\d+ *\%/g);
+        if (percMatch)
+            percMatch.forEach(element => {
+                let num = eval(element.match(/(\d+|\(.+\))/)[0]);
+                let perc = element.match(/\d+ *\%/)[0].match(/\d+/)[0];
+                let sign = element.match(/[\/\*\+\-]/)[0];
+                let res = eval(`${num} ${sign} ${(num * perc / 100)}`);
+                value = value.replace(element, res);
+            });
+        if (factMatch)
+            factMatch.forEach(element => {
+                let num = eval(element.slice(0, element.length - 1));
+                value = value.replace(element, factorial(num));
+            });
+        if (sqrtMatch)
+            sqrtMatch.forEach(element => {
+                let num = eval(element.slice(1));
+                value = value.replace(element, Math.sqrt(num));
+            });
+        if (numsys !== 10) {
+            let intMatch = value.match(/[\dabcdef]+/gi);
+            intMatch.forEach(num => {
+                value = value.replace(num, parseInt(num, numsys));
+            });
+        }
+        if (!validation(value)) {
+            solved.innerHTML = `${equation.value}`;
+            equation.value = 'Invalid Syntax';
+            return 1;
+        }
+        solved.innerHTML = equation.value;
+        let result = eval(value).toString();
+        if (numsys !== 10) {
+            let intMatch = result.match(/[\dabcdef]+/gi);
+            intMatch.forEach(num => {
+                result = result.replace(num, parseInt(num).toString(numsys).toUpperCase());
+            });
+        }
+        equation.value = result;
+        temp = result;
+    };
+
+    from.onchange = (event) => {
+        let value = event.target.value;
+        let temp;
+        let length = /^(cm|m|km)$/;
+        let weight = /^(g|kg|t)$/;
+        let square = /^(scm|sm|skm)$/;
+
+        if (length.test(value))
+            temp = length;
+        if (weight.test(value))
+            temp = weight;
+        if (square.test(value))
+            temp = square;
+
+        for (let i of to.children)
+            i.disabled = !temp.test(i.value);
+    }
 };
 
-// let actions = ['ln', 'sin', 'cos', 'tg', 'ctg', 'exp', log];
-function calculate(value) {
+function convertation(value, from, to) {
 
-    let result;
-    let arr = value.split(' ')
-    for (let i of arr) {
-        for (let j of actions) {
-            if (i.includes(j)) {
-                console.log(i)
-            }
-        }
+    console.log(value);
+    console.log(from);
+    console.log(to);
+    // console.log(/^(cm|m|km)$/.test(to))
+    // console.log(/^(cm|m|km)$/.test(from))
+    if (from === 'cm') {
+        if (to === 'cm')
+            return value;
+        if (to === 'm')
+            return value / 100;
+        if (to === 'km')
+            return value / 100000;
     }
-    
-    if (value.includes('('))    
-        result = formule(value)
-    else 
-        result = solve(value)
-    // 8 + (8 + (6 - 2 + 3))
-    
-    return result
+    if (from === 'm') {
+        if (to === 'cm')
+            return value * 100;
+        if (to === 'm')
+            return value;
+        if (to === 'km')
+            return value / 1000;
+    }
+    if (from === 'km') {
+        if (to === 'cm')
+            return value * 100000;
+        if (to === 'm')
+            return value * 1000;
+        if (to === 'km')
+            return value;
+    }
+    if (from === 'g') {
+        if (to === 'g')
+            return value;
+        if (to === 'kg')
+            return value / 1000;
+        if (to === 't')
+            return value / 1000000;
+    }
+    if (from === 'kg') {
+        if (to === 'g')
+            return value * 1000;
+        if (to === 'kg')
+            return value;
+        if (to === 't')
+            return value / 1000;
+    }
+    if (from === 't') {
+        if (to === 'g')
+            return value * 1000000;
+        if (to === 'kg')
+            return value * 1000;
+        if (to === 't')
+            return value;
+    }
+    if (from === 'scm') {
+        if (to === 'scm')
+            return value;
+        if (to === 'sm')
+            return value / 10000;
+        if (to === 'skm')
+            return value / 10000000000;
+    }
+    if (from === 'sm') {
+        if (to === 'scm')
+            return value * 10000;
+        if (to === 'sm')
+            return value;
+        if (to === 'skm')
+            return value / 1000000;
+    }
+    if (from === 'skm') {
+        if (to === 'scm')
+            return value * 10000000000;
+        if (to === 'sm')
+            return value * 1000000;
+        if (to === 'skm')
+            return value;
+    }
 }
 
-function formule(value) {
-    
-    let counter = 0
-    let fbracket;
-    let temp;
-    for (let i = 0; i < value.length; i++) {
-
-
-        if (value[i] === '(')  {
-            if (fbracket === undefined)
-                fbracket = i
-            counter++
-        }
-        if (value[i] === ')') {
-            counter--
-            if (counter === 0) {
-                temp = value.slice(fbracket + 1, i)
-                // console.log(value)
-                // console.log(temp)
-                let res;
-                if (temp.includes('(') && temp.includes(')')) 
-                    res = value.slice(0, fbracket) + String(formule(temp)) + value.slice(i + 1, value[value.length])                            
-                else 
-                    res = value.slice(0, fbracket) + String(solve(temp)) + value.slice(i + 1, value[value.length])                   
-                return solve(res)                     
-            }                  
-        }            
+function validation(elem) {
+    try {
+        eval(elem);
+    } catch (SyntaxError) {
+        return false;
     }
-} 
-
-
-
-function solve(value) {
-
-    let arr = value.split(' ')
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === '*') {
-            arr[i] = Number(arr[i-1]) * Number(arr[i+1])
-            arr.splice(i + 1, 1)
-            arr.splice(i - 1, 1)
-            i = 0
-        }
-        if (arr[i] === '/') {
-            arr[i] = Number(arr[i-1]) / Number(arr[i+1])
-            arr.splice(i + 1, 1)
-            arr.splice(i - 1, 1)
-            i = 0
-        }
-    }
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === '+') {
-            arr[i] = Number(arr[i-1]) + Number(arr[i+1])
-            arr.splice(i + 1, 1)
-            arr.splice(i - 1, 1)
-            i = 0
-        }
-        if (arr[i] === '-') {
-            arr[i] = Number(arr[i-1]) - Number(arr[i+1])
-            arr.splice(i + 1, 1)
-            arr.splice(i - 1, 1)
-            i = 0
-        }
-    }
-    return arr[0]
+    return true;
 }
 
-
-
-
-
-
-
-
-
-function validation(arr) {
-    // Checking 
-    return true
-    // Подсчет количества скобок и тд
-} 
+var f = [];
+function factorial(n) {
+    if (n == 0 || n == 1)
+        return 1;
+    if (f[n] > 0)
+        return f[n];
+    return f[n] = factorial(n-1) * n;
+}

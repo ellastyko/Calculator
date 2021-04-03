@@ -14,31 +14,39 @@
             <input id='equation' type="text" placeholder='0' autofocus autocomplete='off'>
         </div>
         <div>
-            <button type='button' value="3.14159">&#120587;</button>
+            <button type='button' value="A" class="numbers hex" enabled="false">A</button>
+            <button type='button' value="B" class="numbers hex" enabled="false">B</button>
+            <button type='button' value="C" class="numbers hex" enabled="false">C</button>
+            <button type='button' value="D" class="numbers hex" enabled="false">D</button>
+            <button type='button' value="E" class="numbers hex" enabled="false">E</button>
+            <button type='button' value="F" class="numbers hex" enabled="false">F</button>
+        </div>
+        <div>
+            <button type='button' value="MR">MR</button>
             <button type='button' value='!'>x!</button>
             <button type='button'value='('>(</button>
             <button type='button' value=')'>)</button>
             <button type='button' value="%">%</button>
-            <input type='reset' value='AC'>
+            <input type='reset' value='C' id="reset">
         </div>
         <div>
-            <button type='button' value="sin">sin</button>
-            <button type='button' value="ln">ln</button>
+            <button type='button' value="MC">MC</button>
+            <button type='button' value="PI" style="font-size: 20px;">&#120587;</button>
             <button type='button' value="7" class="numbers" >7</button>
-            <button type='button' value="8" class="numbers" >8</button>
-            <button type='button' value="9" class="numbers" >9</button>
+            <button type='button' value="8" class="numbers dec" >8</button>
+            <button type='button' value="9" class="numbers dec" >9</button>
             <button type='button' value="/">/</button>
         </div>
         <div>
-            <button type='button' value='cos'>cos</button>
-            <button type='button' value='log'>log</button>
+            <button type='button' value='M+'>M+</button>
+            <button type='button' value='^'>x<sup>n</sup></button>
             <button type='button' value="4" class="numbers">4</button>
             <button type='button' value="5" class="numbers">5</button>
             <button type='button' value="6" class="numbers">6</button>
-            <button type='button' value="*">*</button>
+            <button type='button' value="*">&#xD7;</button>
         </div>
         <div>
-            <button type='button' value='tan' >tan</button>
+            <button type='button' value='M-'>M-</button>
             <button type='button' value='sqrt' >√</button>
             <button type='button' value="1" class="numbers" >1</button>
             <button type='button' value="2" class="numbers" >2</button>
@@ -46,12 +54,56 @@
             <button type='button' value='-' >-</button>
         </div>
         <div>
-            <button type='button' value='e'>e</button>
-            <button type='button' value='^'>x<sup>y</sup></button>
+            <button id='converter-button' type='button' value='CA'>CA</button>
             <button type='button' value="0" class="numbers" >0</button>
             <button type='button' value='.' class="numbers" >.</button>
             <input type='submit' value='='>
             <button type='button' value="+" >+</button>
+        </div>
+        <div>
+            <input type="radio" id="decimalBtn"
+            name="numsys" value="decimal" checked="true">
+            <label for="decimalBtn">Dec</label>
+            <input type="radio" id="hexBtn"
+            name="numsys" value="phone">
+            <label for="hexBtn">Hex</label>
+            <input type="radio" id="octBtn"
+            name="numsys" value="mail">
+            <label for="octBtn">Oct</label>
+        </div>
+        <div id='Converter' hidden>
+            <div>From: 
+                <select name="" id="from">
+                    <option disabled>Length</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                    <option value="" disabled>Weight</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="t">tonnes</option>
+                    <option value="" disabled>Area</option>
+                    <option value="scm">square cm</option>
+                    <option value="sm">square m</option>
+                    <option value="skm">square km</option>
+                </select>
+            </div>
+            <div>To:
+                <select name="" id="to">
+                    <option disabled>Length</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                    <option value="" disabled>Weight</option>
+                    <option value="g" disabled>g</option>
+                    <option value="kg" disabled>kg</option>
+                    <option value="t"disabled>tonnes</option>
+                    <option value="" disabled>Area</option>
+                    <option value="scm" disabled>square cm</option>
+                    <option value="sm" disabled>square m</option>
+                    <option value="skm" disabled>square km</option>               
+                </select>
+            </div>
         </div>
     </form>
     <script src='js/script.js'></script>

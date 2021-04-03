@@ -1,29 +1,35 @@
-* {
+body {
     margin: 0px;
     padding: 0px;
-    
     font: 400 16px Monospace;
+    background-image: url("https://image.freepik.com/free-vector/binary-code-white-background-with-floating-numbers_1017-25331.jpg");
 }
 
 form {
-    
-    margin: 200px auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
     width: 510px;
-    height: 400px;
+    height: 500px;
+    padding: 30px;
+    margin-left: -290px;
+    margin-top: -285px;
+    background-color: #e3f2ff;
+    border: 5px solid #b3dafc;
+    border-radius: 20px;
 }
 
-form div {
+form > div {
     margin: 0 5px;
 }
 
-
 .equation-border {
-    
     height: 50px;
     padding: 4px;  
     margin: 0 0 20px 0;
     border-radius: 5px;
     border: 1px solid rgb(196, 195, 195);
+    background-color: white;
 }
 
 .equation-border:hover {
@@ -31,23 +37,17 @@ form div {
     border-top: 1px solid grey;
 }
 
-/* .equation-border:focus {
-    
-    border: 1px solid #1E90FF;
-} */
-
 
 span {
     color: grey;
     font-size: 14px;
+    margin-left: 3px;
 }
 
 input[type='text'] {
-
     border: none;
     text-align: right;
     font-size: 20px;
-    
     width: calc(100% - 10px);
     outline: none;     
 }
@@ -63,6 +63,18 @@ button, input[type='reset'] {
     width: 70px;
     height: 40px;
     margin: 7px 2px;
+    transition: linear 0.3s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+}
+
+input[type='reset']:hover {
+    background-color: rgb(255, 107, 107);
+    transition: linear 0.3s;
+}
+
+#converter-button {
+    width: 155px;
 }
 
 input[type='submit'] {
@@ -73,6 +85,11 @@ input[type='submit'] {
     width: 70px;
     height: 40px;
     margin: 7px 2px;
+    transition: linear 0.3s;
+}
+input[type='submit']:hover {
+    background: #1b78d6;
+    transition: linear 0.3s;
 }
 
 button:hover {
@@ -81,13 +98,45 @@ button:hover {
 }
 
 .numbers {
-    background: #e9e0e0;
+    background: #dad3d3;
 }
 
 .numbers:hover {
-    background: #e9e0e0;
+    background: #c0bbbb;
 }
 
 sup {
     font-size: 12px;
+}
+
+
+/* CONVERTER */
+
+#Converter {
+    margin-top: 10px;
+    margin-right: 12px;
+    border-radius: 10px;
+    height: 50px;
+    border: 2px solid #b4daff;
+}
+
+#Converter div {
+    line-height: 50px;
+    text-align: center;
+    height: 100%;
+    width: 50%;
+    float: left;
+}
+
+select {
+    margin: 0 auto;
+    width: 180px;
+    border-radius: 99px;
+    padding: 3px;
+    border: 1px solid rgb(196, 195, 195);
+}
+
+.numbers[enabled='false'] {
+    background-color: rgb(102, 102, 102);
+    color: darkgrey;
 }
